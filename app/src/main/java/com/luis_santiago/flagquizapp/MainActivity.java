@@ -58,9 +58,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.e("MAIN ACTIVITY", ""+currentSecond);
             mSecondsTextView.setText(String.valueOf(currentSecond / 1000));
             if(minutesToStart == 0 && currentSecond ==0){
+                Log.e("MAIN ACTIVITY", "I GOT THE CONDITION");
                 setUpNotification();
-                countDownTimer2.cancel();
                 resetMinutes();
+                countDownTimer2.cancel();
             }
         }
 
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mReset.setOnClickListener(this);
         setSupportActionBar(mToolbar);
         icon = BitmapFactory.decodeResource(this.getResources(),
-                R.mipmap.ic_launcher);
+                R.drawable.ic_launcher_app);
         notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
@@ -162,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setUpNotification(){
         notificaionBuilder = new NotificationCompat.Builder(MainActivity.this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_launcher_app)
                 .setLargeIcon(icon)
                 .setContentTitle("Time to relax!")
                 .setContentText("You've been working very hard, it's time for a break!");
@@ -190,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void startTiming(){
         if(minutesToStart==1){
             mMinutesTextview.setText("0");
-
         }
         isStarted = true;
         countDownTimer2.start();
