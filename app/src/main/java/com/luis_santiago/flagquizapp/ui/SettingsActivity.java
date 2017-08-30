@@ -1,5 +1,8 @@
 package com.luis_santiago.flagquizapp.ui;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,40 +18,15 @@ import com.luis_santiago.flagquizapp.R;
 public class SettingsActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
-    private Switch mSwitch;
-    private SeekBar mSeekbar;
-    private TextView mTextView;
 
-
-    private SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            Keys.MINUTE_TO_START = progress;
-            Log.e("Setting", "Minutes are being changed" + Keys.MINUTE_TO_START);
-            mTextView.setText(String.valueOf(progress));
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {}
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {}
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        initComponents();
+        FragmentPrefrences fragmentPrefrences = new FragmentPrefrences();
+        setUpFragment(fragmentPrefrences);
         loadToolbar();
-        mSeekbar.setOnSeekBarChangeListener(onSeekBarChangeListener);
-        mSeekbar.setProgress(Keys.MINUTE_TO_START);
-        mTextView.setText(String.valueOf(Keys.MINUTE_TO_START));
-    }
-
-    private void initComponents(){
-       mSwitch = (Switch) findViewById(R.id.switch_settings);
-        mSeekbar = (SeekBar) findViewById(R.id.seekbar);
-        mTextView = (TextView) findViewById(R.id.text_seek);
     }
 
     private void loadToolbar(){
@@ -59,6 +37,16 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+    private void setUpFragment(android.support.v4.app.Fragment fragment){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container,fragment)
+                .setTransition(FragmentTransaction.TRANSIT_ENTER_MASK)
+                .addToBackStack(null)
+                .commit();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -69,4 +57,11 @@ public class SettingsActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
 }

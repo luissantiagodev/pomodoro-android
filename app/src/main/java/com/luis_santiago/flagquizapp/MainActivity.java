@@ -50,26 +50,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private NotificationManager notificationManager;
     private int currentNotificationID = 0;
 
-
     private CountDownTimer countDownTimer2 = new CountDownTimer(currentSecond, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             currentSecond -=1000;
-            Log.e("MAIN ACTIVITY", ""+currentSecond);
             mSecondsTextView.setText(String.valueOf(currentSecond / 1000));
             if(minutesToStart == 0 && currentSecond ==0){
-                Log.e("MAIN ACTIVITY", "I GOT THE CONDITION");
+                Log.e("MAIN ACTIVITY", "I'M done counting");
                 setUpNotification();
                 resetMinutes();
-                countDownTimer2.cancel();
             }
         }
-
         @Override
         public void onFinish() {
             Log.e("", "minutesToStart"+minutesToStart+" currentSecond"+currentSecond);
-            minutesToStart -=1;
+            minutesToStart-=1;
             mSecondsTextView.setText(String.valueOf(currentSecond));
+            currentSecond = 60000;
             mMinutesTextview.setText(String.valueOf(minutesToStart));
             start();
         }
@@ -126,15 +123,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.start:{
                 // call the start method
-                if(!isStarted){
+                if(!isStarted ){
                     startTiming();
                 }
                 break;
             }
             case R.id.stop:{
                 //call the stop method
-                countDownTimer2.cancel();
-                isStarted = false;
+                stop();
                 break;
             }
 
@@ -145,15 +141,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        minutesToStart = Keys.MINUTE_TO_START;
-        mMinutesTextview.setText(String.valueOf(minutesToStart));
+    private void stop(){
+        countDownTimer2.cancel();
+        isStarted = false;
     }
-
     private void resetMinutes() {
+        countDownTimer2.cancel();
         currentSecond = 60000;
         minutesToStart = Keys.MINUTE_TO_START;
         mSecondsTextView.setText("00");
@@ -187,12 +180,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // setting our notification to just be send!
         notificationManager.notify(notificationId, notification);
     }
-
     private void startTiming(){
         if(minutesToStart==1){
             mMinutesTextview.setText("0");
         }
+        mMinutesTextview.setText(String.valueOf(minutesToStart));
         isStarted = true;
         countDownTimer2.start();
+        Keys.UPDATE_PERMISSON = false;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("MAIN ACTIVITY", ""+Keys.UPDATE_PERMISSON);
+        if(Keys.UPDATE_PERMISSON){
+            minutesToStart = Keys.MINUTE_TO_START;
+            mMinutesTextview.setText(String.valueOf(minutesToStart));
+            mSecondsTextView.setText("00");
+        }
     }
 }
