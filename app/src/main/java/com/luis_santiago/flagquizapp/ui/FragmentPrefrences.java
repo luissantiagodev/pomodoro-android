@@ -47,6 +47,11 @@ public class FragmentPrefrences extends Fragment {
     private SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            // Disallow 0 minutes
+            if (progress == 0) {
+                progress = 1;
+                seekBar.setProgress(progress);
+            }
             Keys.MINUTE_TO_START = progress;
             Keys.UPDATE_PERMISSON = true;
             Log.e("Setting", "Minutes are being changed" + Keys.MINUTE_TO_START);
