@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         @Override
         public void onFinish() {
-            Log.e("Main activity", "ESTOY PASANDO POR EL onFinish Method");
             //When the 60 sec have passed we have to rest the current minutes
             minutesToStart-=1;
             mSecondsTextView.setText(String.valueOf(currentSecond));
@@ -189,13 +188,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startTiming(){
-        Log.e("Main activity", "ANTES:"+minutesToStart);
+        Log.e("Main activity", "Before:"+minutesToStart);
         if(!isFirstTimePressed){
             minutesToStart-=1;
-            Log.e("Main activity", "ESTOY RESTANDO");
+            Log.e("Main activity", "I'm resting");
             isFirstTimePressed = true;
         }
-        Log.e("Main activity", "AHORA:"+minutesToStart);
+        Log.e("Main activity", "NOW:"+minutesToStart);
         if(minutesToStart==1){
             mMinutesTextview.setText("0");
         }
