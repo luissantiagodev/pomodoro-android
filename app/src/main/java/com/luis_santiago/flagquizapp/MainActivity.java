@@ -35,7 +35,6 @@ import static android.R.string.no;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     private TextView mMinutesTextview;
     private TextView mSecondsTextView;
     private Toolbar mToolbar;
@@ -49,12 +48,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Bitmap icon;
     private NotificationManager notificationManager;
     private int currentNotificationID = 0;
+    private boolean isFirstTimePressed = false;
 
     private CountDownTimer countDownTimer2 = new CountDownTimer(currentSecond, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
+            //We rest our currentSecond so we can take track on how many seconds have passed on our UI
             currentSecond -=1000;
             mSecondsTextView.setText(String.valueOf(currentSecond / 1000));
+            //Once we reach 0 in minutes and seconds we notify the user we are done
             if(minutesToStart == 0 && currentSecond ==0){
                 Log.e("MAIN ACTIVITY", "I'M done counting");
                 setUpNotification();
@@ -63,11 +65,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         @Override
         public void onFinish() {
-            Log.e("", "minutesToStart"+minutesToStart+" currentSecond"+currentSecond);
+            Log.e("Main activity", "ESTOY PASANDO POR EL onFinish Method");
+            //When the 60 sec have passed we have to rest the current minutes
             minutesToStart-=1;
             mSecondsTextView.setText(String.valueOf(currentSecond));
+            //We restart the seconds so we dont have negative values
             currentSecond = 60000;
             mMinutesTextview.setText(String.valueOf(minutesToStart));
+            //We start our onTick()
             start();
         }
     };
@@ -85,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 R.drawable.ic_launcher_app);
         notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -141,10 +145,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
     private void stop(){
         countDownTimer2.cancel();
         isStarted = false;
     }
+
     private void resetMinutes() {
         countDownTimer2.cancel();
         currentSecond = 60000;
@@ -152,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSecondsTextView.setText("00");
         mMinutesTextview.setText(String.valueOf(minutesToStart));
         isStarted = false;
+        isFirstTimePressed = false;
     }
 
     private void setUpNotification(){
@@ -180,7 +187,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // setting our notification to just be send!
         notificationManager.notify(notificationId, notification);
     }
+
     private void startTiming(){
+        Log.e("Main activity", "ANTES:"+minutesToStart);
+        if(!isFirstTimePressed){
+            minutesToStart-=1;
+            Log.e("Main activity", "ESTOY RESTANDO");
+            isFirstTimePressed = true;
+        }
+        Log.e("Main activity", "AHORA:"+minutesToStart);
         if(minutesToStart==1){
             mMinutesTextview.setText("0");
         }
@@ -190,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Keys.UPDATE_PERMISSON = false;
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -199,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             minutesToStart = Keys.MINUTE_TO_START;
             mMinutesTextview.setText(String.valueOf(minutesToStart));
             mSecondsTextView.setText("00");
+            isFirstTimePressed = false;
         }
     }
 }
