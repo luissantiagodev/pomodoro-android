@@ -65,7 +65,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //When the 60 sec have passed we have to rest the current minutes
             Log.e(TAG, "CURRENT MINUTES: "+minutesToStart);
             Log.e(TAG, "CURRENT SECONDS: "+currentSecond);
-            if(minutesToStart== 0 && currentSecond<0 || currentSecond ==1000){
+            if(minutesToStart== 0 && currentSecond<0){
+                Log.e(TAG, "Im inside the condition");
                 setUpNotification();
                 resetMinutes();
 
@@ -213,7 +214,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, ""+Keys.UPDATE_PERMISSON);
         if(Keys.UPDATE_PERMISSON){
             minutesToStart = Keys.MINUTE_TO_START;
             mMinutesTextview.setText(String.valueOf(minutesToStart));
