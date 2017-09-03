@@ -35,6 +35,8 @@ import static android.R.string.no;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private String TAG = MainActivity.class.getSimpleName();
+
     private TextView mMinutesTextview;
     private TextView mSecondsTextView;
     private Toolbar mToolbar;
@@ -56,23 +58,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //We rest our currentSecond so we can take track on how many seconds have passed on our UI
             currentSecond -=1000;
             mSecondsTextView.setText(String.valueOf(currentSecond / 1000));
-            //Once we reach 0 in minutes and seconds we notify the user we are done
-            if(minutesToStart == 0 && currentSecond ==0){
-                Log.e("MAIN ACTIVITY", "I'M done counting");
-                setUpNotification();
-                resetMinutes();
-            }
+
         }
         @Override
         public void onFinish() {
             //When the 60 sec have passed we have to rest the current minutes
-            minutesToStart-=1;
-            mSecondsTextView.setText(String.valueOf(currentSecond));
-            //We restart the seconds so we dont have negative values
-            currentSecond = 60000;
-            mMinutesTextview.setText(String.valueOf(minutesToStart));
-            //We start our onTick()
-            start();
+            Log.e(TAG, "CURRENT MINUTES: "+minutesToStart);
+            Log.e(TAG, "CURRENT SECONDS: "+currentSecond);
+            if(minutesToStart== 0 && currentSecond<0 || currentSecond ==1000){
+                setUpNotification();
+                resetMinutes();
+
+            }
+            else{
+                minutesToStart-=1;
+                mSecondsTextView.setText(String.valueOf(currentSecond));
+                //We restart the seconds so we dont have negative values
+                currentSecond = 60000;
+                mMinutesTextview.setText(String.valueOf(minutesToStart));
+                //We start our onTick()
+                start();
+            }
         }
     };
 
@@ -188,13 +194,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startTiming(){
-        Log.e("Main activity", "Before:"+minutesToStart);
+        Log.e(TAG, "Before:"+minutesToStart);
         if(!isFirstTimePressed){
             minutesToStart-=1;
             Log.e("Main activity", "I'm resting");
             isFirstTimePressed = true;
         }
-        Log.e("Main activity", "NOW:"+minutesToStart);
+        Log.e(TAG, "NOW:"+minutesToStart);
         if(minutesToStart==1){
             mMinutesTextview.setText("0");
         }
@@ -207,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("MAIN ACTIVITY", ""+Keys.UPDATE_PERMISSON);
+        Log.e(TAG, ""+Keys.UPDATE_PERMISSON);
         if(Keys.UPDATE_PERMISSON){
             minutesToStart = Keys.MINUTE_TO_START;
             mMinutesTextview.setText(String.valueOf(minutesToStart));
