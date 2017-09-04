@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isFirstTimePressed = false;
 
     private CountDownTimer countDownTimer2 = new CountDownTimer(currentSecond, 1000) {
+
         @Override
         public void onTick(long millisUntilFinished) {
             //We rest our currentSecond so we can take track on how many seconds have passed on our UI
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //When the 60 sec have passed we have to rest the current minutes
             Log.e(TAG, "CURRENT MINUTES: "+minutesToStart);
             Log.e(TAG, "CURRENT SECONDS: "+currentSecond);
-            if(minutesToStart== 0 && currentSecond<0){
+            if(minutesToStart == 0 && currentSecond == 1000){
                 Log.e(TAG, "Im inside the condition");
                 setUpNotification();
                 resetMinutes();
