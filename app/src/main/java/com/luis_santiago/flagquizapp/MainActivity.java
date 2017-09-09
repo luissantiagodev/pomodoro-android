@@ -7,31 +7,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Icon;
-import android.icu.util.*;
-import android.icu.util.Calendar;
-import android.icu.util.GregorianCalendar;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.app.NotificationBuilderWithBuilderAccessor;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import java.util.*;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.luis_santiago.flagquizapp.ui.AboutActivity;
 import com.luis_santiago.flagquizapp.ui.SettingsActivity;
-
-import static android.R.string.no;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -108,10 +97,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.about:{
-                startActivity(new Intent(MainActivity.this, AboutActivity.class));
-                break;
-            }
             case R.id.settings:{
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
