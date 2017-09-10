@@ -8,8 +8,11 @@ You can download the app in this Link:[Coming soon]
 # Features
 * Get notified when the timer stops.
 * you can configure the time in any moment
-# Developed by 
+
+# Collaborators 
 Luis Fernando Santiago Ruiz - luissantiagodev@gmail.com
+
+[Lakshmikant Deshpande](https://github.com/lakshmikantdeshpande)
 # License
    Copyright 2017 Luis Santiago
 
