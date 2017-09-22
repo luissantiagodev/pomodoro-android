@@ -20,6 +20,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.luis_santiago.flagquizapp.ui.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -40,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private NotificationManager notificationManager;
     private int currentNotificationID = 0;
     private boolean isFirstTimePressed = false;
+    //This is for ads
+    private InterstitialAd interstitialAd;
+    private AdView mAdview;
 
     private CountDownTimer countDownTimer2 = new CountDownTimer(currentSecond, 1000) {
 
@@ -85,6 +92,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         icon = BitmapFactory.decodeResource(this.getResources(),
                 R.drawable.ic_launcher_app);
         notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                Log.i("Ads", "onAdLoaded");
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                Log.i("Ads", "onAdFailedToLoad NOW"+ errorCode);
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+                Log.i("Ads", "onAdOpened");
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+                Log.i("Ads", "onAdLeftApplication");
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when when the interstitial ad is closed.
+                Log.i("Ads", "onAdClosed");
+            }
+        });
+
+        interstitialAd.setAdUnitId("ca-app-pub-5461480863776866/3346084113");
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("FA73653EA402CC30D55A5140976DA6C4")
+                .build();
+        interstitialAd.loadAd(adRequest);
+        mAdview.loadAd(adRequest);
     }
 
     @Override
@@ -112,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mStart = (Button) findViewById(R.id.start);
         mStop = (Button) findViewById(R.id.stop);
         mReset = (Button) findViewById(R.id.reset);
+        mAdview = (AdView) findViewById(R.id.adView);
     }
 
     @Override
@@ -121,6 +168,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // call the start method
                 if(!isStarted ){
                     startTiming();
+                    Log.e(TAG,String.valueOf(interstitialAd.isLoaded()));
+                    if(interstitialAd.isLoaded()){
+                        interstitialAd.show();
+                    }
                 }
                 break;
             }
@@ -206,5 +257,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mSecondsTextView.setText("00");
             isFirstTimePressed = false;
         }
+        if (mAdview != null) {
+            mAdview.resume();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mAdview!= null) {
+            mAdview.destroy();
+        }
+        super.onDestroy();
     }
 }
