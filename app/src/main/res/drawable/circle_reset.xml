@@ -16,7 +16,7 @@
         </shape>
     </item>
     <item
-        android:drawable="@drawable/icons8_checkmark"
+        android:drawable="@drawable/icons8_reset"
         android:left="10dp"
         android:right="10dp"
         android:top="10dp"
