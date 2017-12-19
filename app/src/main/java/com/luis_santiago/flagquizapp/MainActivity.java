@@ -1,43 +1,69 @@
 package com.luis_santiago.flagquizapp;
 
+import android.animation.ObjectAnimator;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String TAG = MainActivity.class.getSimpleName();
 
     private Toolbar mToolbar;
-    private Button mReset;
-    private Button mStart;
-    private Button mStop;
+
+    private FloatingActionButton mReset;
+
+    private FloatingActionButton mStart;
+
+    private FloatingActionButton mStop;
+
     private NotificationCompat.Builder notificaionBuilder;
+
     private Bitmap icon;
+
     private NotificationManager notificationManager;
+
     private int currentNotificationID = 0;
-    //This is for ads
-    private InterstitialAd interstitialAd;
+
     private AdView mAdview;
 
+    private ArcProgress mCircularProgressBar;
 
+    private CountDownTimer mCounterTimer;
+
+    private TextView mTimeTextView;
+
+    private Long generalMilisecondsProgress;
+
+    private boolean isCounting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +71,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         initComponents();
-
-
         setSupportActionBar(mToolbar);
 
         icon = BitmapFactory.decodeResource(this.getResources(),
@@ -54,14 +78,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        //mAdview.loadAd(Adds.getAddInstance(this));
+        mStart.setOnClickListener(this);
+        mReset.setOnClickListener(this);
+        mStop.setOnClickListener(this);
 
-        /*interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId("ca-app-pub-5461480863776866/3346084113");
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("FA73653EA402CC30D55A5140976DA6C4")
-                .build();
-        interstitialAd.loadAd(adRequest);
-        mAdview.loadAd(adRequest);*/
+        /**
+         * 20 minutes is equal to 1,200,000 miliseconds by multiplying 60 seg * 1000 milliseconds
+         * */
+        setUpTimer(null);
+        setUpToolbar();
+        setMaxPref();
+    }
+
+
+    private void setMaxPref(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Long valueFromSettings = convertMinutesToMiliseconds(Long.valueOf(preferences.getString("time_progress" , "20")));
+        mCircularProgressBar.setMax((int) (valueFromSettings / 1000));
+    }
+
+    private void setUpTimer(Long resOfMinutes){
+        //Get the current value from the preference settings
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Long valueFromSettings = convertMinutesToMiliseconds(Long.valueOf(preferences.getString("time_progress" , "20")));
+
+        if(resOfMinutes !=null){
+            valueFromSettings = resOfMinutes;
+        }
+
+        mCounterTimer = new CountDownTimer(valueFromSettings , 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                isCounting = true;
+                int processMade = (int) (millisUntilFinished / 1000);
+                int minutes = processMade / 60;
+                int seconds = processMade % 60;
+                generalMilisecondsProgress = millisUntilFinished;
+                mTimeTextView.setText(String.format("%02d", minutes) + ":" + String.format("%02d" , seconds));
+                mCircularProgressBar.setProgress(processMade);
+            }
+
+            @Override
+            public void onFinish() {
+                setUpNotification();
+                isCounting = false;
+            }
+        }.start();
+    }
+
+
+    private Long convertMinutesToMiliseconds(Long minutes){
+        return minutes * 1000 * 60;
     }
 
     @Override
@@ -75,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.settings:{
-
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
             }
         }
@@ -83,26 +152,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initComponents(){
-        mToolbar = (Toolbar)findViewById(R.id.toolbar);
         mAdview = (AdView) findViewById(R.id.adView);
+        mStart = (FloatingActionButton) findViewById(R.id.play);
+        mStop = (FloatingActionButton) findViewById(R.id.pause);
+        mReset = (FloatingActionButton) findViewById(R.id.reset);
+        mCircularProgressBar = (ArcProgress) findViewById(R.id.circular_progress);
+        mTimeTextView = (TextView) findViewById(R.id.time_text_view);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.start:{
-
-                break;
-            }
-            case R.id.stop:{
-                //call the stop method
-
+            case R.id.pause : {
+                mCounterTimer.cancel();
+                isCounting = false;
                 break;
             }
 
-            case R.id.reset:{
-                //call the reset method
+            case R.id.play : {
+                if (generalMilisecondsProgress != null && !isCounting) {
+                    mCounterTimer.cancel();
+                    setUpTimer(generalMilisecondsProgress);
+                }
+                break;
+            }
 
+            case R.id.reset : {
+                mCounterTimer.cancel();
+                setUpTimer(null);
+                setMaxPref();
                 break;
             }
         }
@@ -151,5 +229,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mAdview.destroy();
         }
         super.onDestroy();
+    }
+
+    private void setUpToolbar(){
+        mToolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 }
