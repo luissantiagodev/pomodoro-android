@@ -1,4 +1,4 @@
-package com.luis_santiago.flagquizapp;
+package com.luis_santiago.pomodoro;
 
 import org.junit.Test;
 

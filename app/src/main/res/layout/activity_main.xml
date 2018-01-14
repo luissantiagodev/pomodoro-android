@@ -8,7 +8,7 @@
     android:background="@color/gray_background"
     android:layout_height="match_parent"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
-    tools:context="com.luis_santiago.flagquizapp.MainActivity">
+    tools:context="com.luis_santiago.pomodoro.MainActivity">
 
 
     <RelativeLayout
@@ -116,7 +116,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 ads:adSize="BANNER"
-                ads:adUnitId="ca-app-pub-5461480863776866/1384390906">
+                ads:adUnitId="ca-app-pub-5461480863776866/9089349780">
             </com.google.android.gms.ads.AdView>
         </RelativeLayout>
     </RelativeLayout>

@@ -1,6 +1,5 @@
-package com.luis_santiago.flagquizapp;
+package com.luis_santiago.pomodoro;
 
-import android.animation.ObjectAnimator;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,27 +9,22 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -65,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean isCounting;
 
+    private boolean firstTime = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,8 +73,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 R.drawable.ic_launcher_app);
 
         notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        MobileAds.initialize(this, "ca-app-pub-5461480863776866~9743955901");
 
-        //mAdview.loadAd(Adds.getAddInstance(this));
+        
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdview.loadAd(adRequest);
+
         mStart.setOnClickListener(this);
         mReset.setOnClickListener(this);
         mStop.setOnClickListener(this);
@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /**
          * 20 minutes is equal to 1,200,000 miliseconds by multiplying 60 seg * 1000 milliseconds
          * */
-        setUpTimer(null);
         setUpToolbar();
         setMaxPref();
     }
@@ -173,6 +172,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (generalMilisecondsProgress != null && !isCounting) {
                     mCounterTimer.cancel();
                     setUpTimer(generalMilisecondsProgress);
+                }else if (firstTime){
+                    setUpTimer(null);
+                    firstTime = false;
                 }
                 break;
             }
@@ -191,8 +193,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         notificaionBuilder = new NotificationCompat.Builder(MainActivity.this)
                 .setSmallIcon(R.drawable.ic_launcher_app)
                 .setLargeIcon(icon)
-                .setContentTitle("Time to relax!")
-                .setContentText("You've been working very hard, it's time for a break!");
+                .setContentTitle("Hora de descansar!")
+                .setContentText("Has estado trabajando duro, es hora de tomar un descanso!");
         sendNotification();
     }
 

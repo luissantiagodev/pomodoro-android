@@ -4,11 +4,11 @@ android {
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.luis_santiago.flagquizapp"
+        applicationId "com.luis_santiago.pomodoro"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -28,7 +28,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.0.1'
-    compile 'com.google.android.gms:play-services-ads:11.2.0'
+    compile 'com.google.android.gms:play-services-ads:11.6.0'
     compile 'com.github.lzyzsd:circleprogress:+'
     testCompile 'junit:junit:4.12'
 }

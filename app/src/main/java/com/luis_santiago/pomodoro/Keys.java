@@ -1,4 +1,4 @@
-package com.luis_santiago.flagquizapp;
+package com.luis_santiago.pomodoro;
 
 /**
  * Created by legendarywicho on 8/22/17.

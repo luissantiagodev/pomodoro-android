@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.luis_santiago.flagquizapp">
+          package="com.luis_santiago.pomodoro">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -16,16 +16,16 @@
         android:roundIcon="@drawable/ic_launcher_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:screenOrientation="portrait">
+        <activity android:name="com.luis_santiago.pomodoro.MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity" android:parentActivityName=".MainActivity" android:screenOrientation="portrait">
+        <activity android:name="com.luis_santiago.pomodoro.SettingsActivity" android:parentActivityName="com.luis_santiago.pomodoro.MainActivity" android:screenOrientation="portrait">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainActivity"/>
+            android:value="com.luis_santiago.pomodoro.MainActivity"/>
         </activity>
     </application>
 

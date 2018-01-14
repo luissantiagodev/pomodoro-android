@@ -2,11 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="Audio settings">
+        android:title="Configurar tiempo ">
 
         <EditTextPreference
             android:key="time_progress"
-            android:title="Change default time"
+            android:title="Cambiar la cantidad de conteo"
             android:persistent="true"
             android:inputType="number"
             android:maxLength="2"
