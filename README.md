@@ -1,7 +1,8 @@
 # Pomodoro
 Pomodoro is an awesome app that will help you get more productive with the pomodoro tecnique.
 # Download the app!
-You can download the app in this Link:[Coming soon]
+You can download the app in the playstore
+[![google-play-badge-logo-png-transparent](https://user-images.githubusercontent.com/21210652/45766942-814a0800-bbfe-11e8-9c76-c2d4af8bb213.png)](https://play.google.com/store/apps/details?id=com.luis_santiago.pomodoro)
 ============
 ![pomodoro](https://user-images.githubusercontent.com/21210652/30008467-a0042770-90e5-11e7-911c-7c93073cca20.png)
 ============
